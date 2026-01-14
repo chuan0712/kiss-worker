@@ -1,39 +1,35 @@
 name: Cloudflare Worker
 
 on:
-  push:
-    branches:
-      - master
-  workflow_dispatch:
-  repository_dispatch:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+  repository_dispatch:
 
 permissions:
-  contents: read
+  contents: read
 
 env:
-  NODE_VERSION: '20.x' 
+  NODE_VERSION: '20.x' 
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    name: deploy
-    steps:
-      - uses: actions/checkout@v4
+  deploy:
+    runs-on: ubuntu-latest
+    name: deploy
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'yarn'
-      - name: Install dependencies
-        # 使用 --immutable 确保锁文件不被更改
-        # 如果依然报错，请先在本地运行 yarn install 并提交最新的 yarn.lock
-        run: yarn install --immutable
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
 
-      - name: Build
-        run: yarn build
+      - name: Build
+        run: yarn install && yarn build
 
-      - name: Publish
-        uses: cloudflare/wrangler-action@3.0.0
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
+      - name: Publish
+        uses: cloudflare/wrangler-action@3.0.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
