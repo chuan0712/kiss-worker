@@ -25,9 +25,13 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
+      - name: Install dependencies
+        # 使用 --immutable 确保锁文件不被更改
+        # 如果依然报错，请先在本地运行 yarn install 并提交最新的 yarn.lock
+        run: yarn install --immutable
 
       - name: Build
-        run: yarn install && yarn build
+        run: yarn build
 
       - name: Publish
         uses: cloudflare/wrangler-action@3.0.0
